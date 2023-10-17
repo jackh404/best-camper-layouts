@@ -1,6 +1,6 @@
 //server location: https://best-camper-layouts-server.onrender.com/campers
 //dev server: http://localhost:3000/campers
-const serverURL = "http://localhost:3000/campers"
+const serverURL = "https://best-camper-layouts-server.onrender.com/campers"
 
 //global js variables
 const campers = []
@@ -29,13 +29,14 @@ const renderCampers = (campers) => {
     campers.forEach(element => {
         const newDiv = document.createElement('div')
         newDiv.classList.add("camperThumbDiv")
+        newDiv.addEventListener("click",() => displayCamper(element))
 
         const camperImg = document.createElement('img')
         camperImg.src = element.layoutPic
         camperImg.alt = element.manufacturer + " " + element.line + " " + element.model
         camperImg.classList.add("camperThumb")
 
-        const label = document.createElement('h6')
+        const label = document.createElement('h5')
         label.textContent = element.line + " " + element.model
 
         newDiv.append(camperImg)
@@ -106,5 +107,12 @@ const updateVotes = (vote) => {
 
 //displays a single camper and its slideshow in the details pane
 const displayCamper = (camper) => {
-
+    activeCamper = camper
+    document.getElementById("camperName").textContent = `The ${camper.manufacturer} ${camper.line} ${camper.model}`
+    document.getElementById("detailLayout").src = camper.layoutPic
+    document.getElementById("manufacturer").textContent = camper.manufacturer
+    document.getElementById("line").textContent = camper.line
+    document.getElementById("model").textContent = camper.model
+    document.getElementById("slides").textContent = camper.slides
+    document.getElementById("length").textContent = camper.length
 }
