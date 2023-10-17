@@ -9,19 +9,24 @@ let downVote = false
 const fetchCampers = () => {
     fetch("https://best-camper-layouts-server.onrender.com/campers")
     .then(resp => resp.json())
-    .then(data => renderCampers(data))
+    .then(data => data)
     .catch(error =>{
         alert("Oh noes! Something went wrong!")
         console.log(error)
     })
 }
-fetchCampers()
-
 //shows list & thumbnails of campers in the thumbail pane
 const renderCampers = (campers) => {
     campers.forEach(element => {
         
     });
+}
+//initial call upon page load
+renderCampers(fetchCampers())
+
+//filters camper list according to selected criteria
+const filterCampers = (criterion,value) => {
+
 }
 
 /* checks whether user has already upvoted or downvoted in the current session and adjusts 
