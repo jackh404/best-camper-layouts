@@ -1,0 +1,27 @@
+#container{
+    text-align: center;
+}
+
+#camper_thumbs{
+    display: flex;
+    justify-content: center;
+}
+.camperThumbDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 10px;
+}
+.camperThumb{
+    object-fit: contain;
+    width: 300px;
+    height: 200px;
+    background-color: white;
+}
+.camperThumb:hover{
+    box-shadow: 0px 0px 5px 5px;
+}
+
+.hidden{
+    display: none;
+}
