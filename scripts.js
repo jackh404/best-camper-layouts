@@ -4,11 +4,19 @@ const serverURL = "https://best-camper-layouts-server.onrender.com/campers"
 
 //global js variables
 const campers = []
+const filters = {}
 let activeCamper
 let upVote = false
 let downVote = false
 
+//global document element variables
+const form = document.getElementById("filter")
 
+/* * * * * * * * * * * * * *
+ *                         *
+ * Functions               *
+ *                         *
+ * * * * * * * * * * * * * */
 
 //runs initial fetch to retrieve camper data from server
 const fetchCampers = () => {
@@ -26,6 +34,10 @@ const fetchCampers = () => {
 //shows list & thumbnails of campers in the thumbail pane
 const renderCampers = (campers) => {
     const camper_thumbs = document.getElementById("camper_thumbs")
+    camper_thumbs.textContent = ""
+    if(campers.length === 0){
+        camper_thumbs.innerHTML = "<h3>Whoops! No campers found!</h3>"
+    }
     campers.forEach(element => {
         const newDiv = document.createElement('div')
         newDiv.classList.add("camperThumbDiv")
@@ -47,13 +59,10 @@ const renderCampers = (campers) => {
 //initial call upon page load
 fetchCampers()
 
-//filters camper list according to selected criteria
-const filterCampers = (criterion,value) => {
 
-}
-
-/* checks whether user has already upvoted or downvoted in the current session and adjusts 
- * vote counts appropriately before updating server and calling for a screen update. */
+/* checks whether user has already upvoted or downvoted in the current session and 
+ * adjusts vote counts appropriately before updating server and calling for a screen 
+ * update. */
 const updateVotes = (vote) => {
     if(vote===1){
         switch(true){
@@ -152,3 +161,91 @@ const displaySlide = (slide,longName) =>{
     currentSlide.title = title
     currentSlide.classList.remove("hidden")
 }
+
+//updates display lable and filter parameter when user interacts with "filter by length" range slider
+const setFilterLength = () => {
+    const range = document.querySelector('#lengthFil')
+    const rangeLbl = document.querySelector("label[for=lengthFil]")
+    rangeLbl.textContent = range.value
+    filters.length = parseInt(range.value)
+    applyFilters()
+}
+
+//applies filters and calls renderCampers function with filtered down array
+const applyFilters = () => {
+    let filteredArray = campers
+    if(filters.keyWord)
+    {
+        filteredArray = filteredArray.filter(camper =>
+            (
+                camper.manufacturer.toLowerCase().includes(filters.keyWord) ||
+                camper.line.toLowerCase().includes(filters.keyWord) ||
+                camper.model.toLowerCase().includes(filters.keyWord)
+            )
+        )
+    }
+    if(filters.length)
+    {
+        filteredArray = filteredArray.filter(camper =>
+            (
+                camper.length >= filters.length-2 &&
+                camper.length <= filters.length+2
+            )
+        )
+    }
+    if(filters.slides)
+    {
+        filteredArray = filteredArray.filter(camper => camper.slides == filters.slides)
+    }
+    renderCampers(filteredArray)
+}
+
+/* * * * * * * * * * * * * *
+ *                         *
+ * Event Listeners         *
+ *                         *
+ * * * * * * * * * * * * * */
+
+
+//detects and interprets clicks in the form area to create interactivity
+form.addEventListener("click",e=>{
+    switch(e.target){
+        case form.fbLength:
+            const lengthDiv = document.getElementById("lengthDiv")
+            if(form.fbLength.checked){
+                lengthDiv.classList.remove("hidden")
+                setFilterLength()
+            } else {
+                lengthDiv.classList.add("hidden")
+                filters.length = null
+            }
+            break
+        case form.fbSlides:
+            const slidesDiv = document.getElementById("slidesDiv")
+            if(form.fbSlides.checked){
+                slidesDiv.classList.remove('hidden')
+                filters.slides = form.slidesFil.value
+            } else {
+                slidesDiv.classList.add('hidden')
+                filters.slides = null
+            }
+            break
+    }
+    applyFilters()
+})
+
+//detects typing in search box and sets keyword filter parameter
+form.search.addEventListener("keyup",e=>{
+    filters.keyWord = form.search.value.toLowerCase()
+    applyFilters()
+})
+
+//detects sliding of camper length selector and calls function to set filter parameter
+form.lengthFil.addEventListener("input",()=>setFilterLength())
+
+/* detects clicks in slide number selection area and updates slide number filter
+ * parameter */
+document.getElementById('slidesDiv').addEventListener('click',()=>filters.slides = form.slidesFil.value)
+
+//prevents page refresh on form submit
+form.addEventListener('submit',e=>e.preventDefault())
