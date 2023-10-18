@@ -108,11 +108,47 @@ const updateVotes = (vote) => {
 //displays a single camper and its slideshow in the details pane
 const displayCamper = (camper) => {
     activeCamper = camper
-    document.getElementById("camperName").textContent = `The ${camper.manufacturer} ${camper.line} ${camper.model}`
+    const longName = `The ${camper.manufacturer} ${camper.line} ${camper.model}`
+    document.getElementById("camperName").textContent = longName
     document.getElementById("detailLayout").src = camper.layoutPic
     document.getElementById("manufacturer").textContent = camper.manufacturer
     document.getElementById("line").textContent = camper.line
     document.getElementById("model").textContent = camper.model
     document.getElementById("slides").textContent = camper.slides
     document.getElementById("length").textContent = camper.length
+    slideShow(camper,longName)
+}
+
+//sets up slideshow in detail pane
+const slideShow = (camper,longName) => {
+    const slides = camper.slideShowPics
+    let index = 0
+
+    displaySlide(slides[index],longName)
+
+    document.getElementById("previous").addEventListener("click",()=>{
+        if(index>0)
+            index--
+        else
+            index=slides.length-1
+        displaySlide(slides[index],longName)
+    })
+    document.getElementById("next").addEventListener("click",()=>{
+        if(index<slides.length-1)
+            index++
+        else
+            index=0
+        displaySlide(slides[index],longName)
+    })
+}
+
+//displays a single slideshow slide in the detail pane
+const displaySlide = (slide,longName) =>{
+    const title = `Image of ${longName} ${slide.alt}`
+    const currentSlide = document.getElementById("currentSlide")
+    currentSlide.classList.add("hidden")
+    currentSlide.src = slide.src
+    currentSlide.alt = title
+    currentSlide.title = title
+    currentSlide.classList.remove("hidden")
 }

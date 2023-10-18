@@ -38,6 +38,16 @@
     padding: 3px
 }
 
+#slideshow > button{
+    font-size: x-large;
+}
+#slideshow > img{
+    object-fit: contain;
+    max-width: 1000px;
+    min-width: 500px;
+    max-height: 700px;
+}
+
 .hidden{
     display: none;
 }
