@@ -6,8 +6,12 @@ const serverURL = "https://best-camper-layouts-server.onrender.com/campers"
 const campers = []
 const filters = {}
 let activeCamper
-let upVote = false
-let downVote = false
+
+//upvote/downvote image urls
+const grayUp = "https://raw.githubusercontent.com/jackh404/best-camper-layouts/main/local/thumbUpGray.png"
+const grayDn = "https://raw.githubusercontent.com/jackh404/best-camper-layouts/main/local/thumbDownGray.png"
+const greenUp = "https://raw.githubusercontent.com/jackh404/best-camper-layouts/main/local/thumbUpGreen.png"
+const redDn = "https://raw.githubusercontent.com/jackh404/best-camper-layouts/main/local/thumbDownRed.png"
 
 //global document element variables
 const form = document.getElementById("filter")
@@ -64,52 +68,52 @@ fetchCampers()
 /* checks whether user has already upvoted or downvoted the selected 
  * camper in the current session and adjusts vote counts appropriately 
  * before updating server and calling for a screen update. */
-const updateVotes = (vote) => {
+const updateVotes = (vote,camper) => {
     if(vote===1){
         switch(true){
-            case activeCamper.upVote:
-                activeCamper.upvote = false
-                activeCamper.upVotes--
+            case camper.upVote:
+                camper.upVote = false
+                camper.upVotes--
                 break
-            case activeCamper.downVote:
-                activeCamper.downVote = false
-                activeCamper.upvote = true
-                activeCamper.upVotes++
-                activeCamper.downVotes--
+            case camper.downVote:
+                camper.downVote = false
+                camper.upVote = true
+                camper.upVotes++
+                camper.downVotes--
                 break
             default:
-                activeCamper.upVote = true
-                activeCamper.upVotes++
+                camper.upVote = true
+                camper.upVotes++
         }
     } else {
         switch(true){
-            case activeCamper.upVote:
-                activeCamper.upvote = false
-                activeCamper.upVotes--
-                activeCamper.downVote = true
-                activeCamper.downVotes++
+            case camper.upVote:
+                camper.upVote = false
+                camper.upVotes--
+                camper.downVote = true
+                camper.downVotes++
                 break
-            case activeCamper.downVote:
-                activeCamper.downVote = false
-                activeCamper.downVotes--
+            case camper.downVote:
+                camper.downVote = false
+                camper.downVotes--
                 break
             default:
-                activeCamper.downVote = true
-                activeCamper.downVotes++
+                camper.downVote = true
+                camper.downVotes++
         }
     }
-    fetch(`https://best-camper-layouts-server.onrender.com/campers/${activeCamper}`,{
+    
+    fetch(`https://best-camper-layouts-server.onrender.com/campers/${camper.id}`,{
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json'
         },
-        body: {
-            'upVotes' : activeCamper.upVotes,
-            'downVotes' : activeCamper.downVotes
-        }
+        body: JSON.stringify({
+            'upVotes' : camper.upVotes,
+            'downVotes' : camper.downVotes
+        })
     })
-    .then(resp => resp.json())
-    .then(() => displayCamper(activeCamper))
+    .then(displayCamper(camper))
     .catch(error =>{
         console.log(error)
         alert("Whoops! Something went wrong with that vote. Try again?")
@@ -118,7 +122,6 @@ const updateVotes = (vote) => {
 
 //displays a single camper and its slideshow in the details pane
 const displayCamper = (camper) => {
-    activeCamper = camper
     const longName = `The ${camper.manufacturer} ${camper.line} ${camper.model}`
     document.getElementById("camperName").textContent = longName
     document.getElementById("detailLayout").src = camper.layoutPic
@@ -127,7 +130,30 @@ const displayCamper = (camper) => {
     document.getElementById("model").textContent = camper.model
     document.getElementById("slides").textContent = camper.slides
     document.getElementById("length").textContent = camper.length
+
+    voteDisplay(camper)
     slideShow(camper,longName)
+
+    activeCamper = camper
+}
+
+/* sets colors of vote thumbs based on whether the user has thumbed the selected camper up or down this
+ * session, then sets upvote/downvote numeric counters*/
+const voteDisplay = (camper) => {
+    //grab buttons
+    const upBtn = document.getElementById('upBtn')
+    const dnBtn = document.getElementById('dnBtn')
+    //change button colors as neccessary
+    if(camper.upVote)
+        upBtn.src = greenUp
+    else
+        upBtn.src = grayUp
+    if(camper.downVote)
+        dnBtn.src = redDn
+    else
+        dnBtn.src = grayDn
+    document.getElementById("upCount").textContent = camper.upVotes
+    document.getElementById("dnCount").textContent = camper.downVotes
 }
 
 //sets up slideshow in detail pane
@@ -251,3 +277,7 @@ document.getElementById('slidesDiv').addEventListener('click',()=>filters.slides
 
 //prevents page refresh on form submit
 form.addEventListener('submit',e=>e.preventDefault())
+
+//calls function to handle up/down voting when up/down thumbs are clicked
+document.getElementById('upBtn').addEventListener("click",()=>updateVotes(1,activeCamper))
+document.getElementById('dnBtn').addEventListener("click",()=>updateVotes(-1,activeCamper))

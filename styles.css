@@ -30,6 +30,33 @@
     justify-content: space-evenly;
     align-items: center;
 }
+#voteDiv{
+    height: 100px;
+    width: 60%;
+    margin:auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+#voteDiv img{
+    width: 100px;
+}
+#upBtn{
+    float: left;
+}
+#dnBtn{
+    float: right;
+}
+#countDiv{
+    width:60%;
+    margin:auto
+}
+#dnCount{
+    float:right;
+}
+#upCount{
+    float:left;
+}
+
 #detailLayout{
     max-width: 800px;
     min-width: 200px
