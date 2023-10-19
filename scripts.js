@@ -45,7 +45,7 @@ const renderCampers = (campers) => {
     campers.forEach(element => {
         const newDiv = document.createElement('div')
         newDiv.classList.add("camperThumbDiv")
-        newDiv.addEventListener("click",() => displayCamper(element))
+        newDiv.addEventListener("click", e => displayCamper(e,element))
 
         const camperImg = document.createElement('img')
         camperImg.src = element.layoutPic
@@ -58,7 +58,9 @@ const renderCampers = (campers) => {
         newDiv.append(camperImg)
         newDiv.append(label)
         camper_thumbs.append(newDiv)
-    });
+        if(element!=campers[0])
+            newDiv.classList.add('divider')
+    })
 }
 
 //initial call upon page load
@@ -121,7 +123,13 @@ const updateVotes = (vote,camper) => {
 }
 
 //displays a single camper and its slideshow in the details pane
-const displayCamper = (camper) => {
+const displayCamper = (e,camper) => {
+    for(thumb of document.getElementsByClassName('camperThumbDiv')){
+        thumb.firstChild.classList.remove('active')
+    }
+    console.log(e.target.tagName)
+    if(e.target.tagName === "IMG")
+        e.target.classList.add('active')
     const longName = `The ${camper.manufacturer} ${camper.line} ${camper.model}`
     document.getElementById("camperName").textContent = longName
     document.getElementById("detailLayout").src = camper.layoutPic

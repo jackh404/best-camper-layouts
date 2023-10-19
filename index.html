@@ -8,34 +8,43 @@
     </head>
     <body>
         <div id = 'container'>
-            <h1>The Best Travel Trailer Layouts</h1>
-            <p>A curated list of some of the most practical and comfortable travel trailer layouts for full-timing or just long term living. Click a layout below to see more details, or start by applying filters based on your preferences!</p>
+            <div id="intro">
+                <h1>The Best Travel Trailer Layouts</h1>
+                <p>A curated list of some of the most practical and comfortable travel trailer layouts for full-timing or just long term living. Click a layout below to see more details, or start by applying filters based on your preferences!</p>
+            </div>
             <div id="camper_thumbs"></div>
-            <h2>Search and Filter!</h2>
-            <form id="filter">
-                <label for="search">Search</label>
-                <input type="text" id="search" name="search" placeholder="Manufacturer, line, model" />
-                <br>
-                <label for="filterBy"><h3>Filter by...</h3></label>
-                <label for="fbLength">Length</label>
-                <input type="checkbox" id="fbLength" name="filterBy" value="length">
-                <br>
-                <div id="lengthDiv" class = 'hidden'>
-                    <input type = "range" id="lengthFil" name="lengthFil" min="30" max="40">
-                    <label for="lengthFil"></label>
-                    <br>
-                </div>
-                <label for="fbSlides">Number of Slides</label>
-                <input type="checkbox" id="fbSlides" name="filterBy" value="slides">
-                <br>
-                <div id = "slidesDiv" class="hidden">
-                    <label for="slides2">2</label>
-                    <input type="radio" id="slides2" name="slidesFil" value = 2>
-                    &emsp;
-                    <label for="slides3">3</label>
-                    <input type="radio" id="slides3" name="slidesFil" value = 3>
-                </div>
-            </form>
+            <div id = "searchAndFilter">
+                <h2>Search and Filter!</h2>
+                <form id="filter">
+                    <label for="search">Search</label>
+                    <input type="text" id="search" name="search" placeholder="Manufacturer, line, model" />
+                    <h3>Filter by...</h3>
+                    <div id="filters">
+                        <div id="lengthContainer">
+                            <label for="fbLength">Length</label>
+                            <input type="checkbox" id="fbLength" name="filterBy" value="length">
+                            <br>
+                            <div id="lengthDiv" class = 'hidden'>
+                                <input type = "range" id="lengthFil" name="lengthFil" min="30" max="40">
+                                <label for="lengthFil"></label>
+                                <br>
+                            </div>
+                        </div>
+                        <div id = "slidesContainer">
+                            <label for="fbSlides">Number of Slides</label>
+                            <input type="checkbox" id="fbSlides" name="filterBy" value="slides">
+                            <br>
+                            <div id = "slidesDiv" class="hidden">
+                                <label for="slides2">2</label>
+                                <input type="radio" id="slides2" name="slidesFil" value = 2>
+                                &emsp;
+                                <label for="slides3">3</label>
+                                <input type="radio" id="slides3" name="slidesFil" value = 3>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
             <div id = "camper_details_container">
                 <h2 id = "camperName"></h2>
                 <div id="camper_details">
@@ -65,12 +74,8 @@
                     </table>
                 </div>
                 <div id="voteDiv">
-                    <img src = "https://raw.githubusercontent.com/jackh404/best-camper-layouts/main/local/thumbUpGray.png" alt="Thumbs up" id = "upBtn">
-                    <img src="https://raw.githubusercontent.com/jackh404/best-camper-layouts/main/local/thumbDownGray.png" alt="Thumbs down" id = "dnBtn">
-                    
-                </div>
-                <div id='countDiv'>
-                    <span id="upCount"></span><span id="dnCount"></span>
+                    <img src = "https://raw.githubusercontent.com/jackh404/best-camper-layouts/main/local/thumbUpGray.png" alt="Thumbs up" id = "upBtn"><span id="upCount"></span>
+                    <img src="https://raw.githubusercontent.com/jackh404/best-camper-layouts/main/local/thumbDownGray.png" alt="Thumbs down" id = "dnBtn"><span id="dnCount"></span>  
                 </div>
                 <div id = "slideshow">
                     <button id = "previous">◀</button>
