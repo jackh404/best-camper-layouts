@@ -14,7 +14,7 @@ const form = document.getElementById("filter")
 
 /* * * * * * * * * * * * * *
  *                         *
- * Functions               *
+ *        Functions        *
  *                         *
  * * * * * * * * * * * * * */
 
@@ -56,44 +56,45 @@ const renderCampers = (campers) => {
         camper_thumbs.append(newDiv)
     });
 }
+
 //initial call upon page load
 fetchCampers()
 
 
-/* checks whether user has already upvoted or downvoted in the current session and 
- * adjusts vote counts appropriately before updating server and calling for a screen 
- * update. */
+/* checks whether user has already upvoted or downvoted the selected 
+ * camper in the current session and adjusts vote counts appropriately 
+ * before updating server and calling for a screen update. */
 const updateVotes = (vote) => {
     if(vote===1){
         switch(true){
-            case upVote:
-                upvote = false
+            case activeCamper.upVote:
+                activeCamper.upvote = false
                 activeCamper.upVotes--
                 break
-            case downVote:
-                downVote = false
-                upvote = true
+            case activeCamper.downVote:
+                activeCamper.downVote = false
+                activeCamper.upvote = true
                 activeCamper.upVotes++
                 activeCamper.downVotes--
                 break
             default:
-                upVote = true
+                activeCamper.upVote = true
                 activeCamper.upVotes++
         }
     } else {
         switch(true){
-            case upVote:
-                upvote = false
+            case activeCamper.upVote:
+                activeCamper.upvote = false
                 activeCamper.upVotes--
-                downVote = true
+                activeCamper.downVote = true
                 activeCamper.downVotes++
                 break
-            case downVote:
-                downVote = false
+            case activeCamper.downVote:
+                activeCamper.downVote = false
                 activeCamper.downVotes--
                 break
             default:
-                downVote = true
+                activeCamper.downVote = true
                 activeCamper.downVotes++
         }
     }
@@ -108,9 +109,10 @@ const updateVotes = (vote) => {
         }
     })
     .then(resp => resp.json())
-    .then(camper => {
-        activeCamper = camper
-        displayCamper(activeCamper)
+    .then(() => displayCamper(activeCamper))
+    .catch(error =>{
+        console.log(error)
+        alert("Whoops! Something went wrong with that vote. Try again?")
     })
 }
 
@@ -202,7 +204,7 @@ const applyFilters = () => {
 
 /* * * * * * * * * * * * * *
  *                         *
- * Event Listeners         *
+ *     Event Listeners     *
  *                         *
  * * * * * * * * * * * * * */
 
